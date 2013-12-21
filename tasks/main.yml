@@ -12,11 +12,6 @@
   apt: name={{ dhcp_server_package }} state=installed update_cache=yes
   when: ansible_os_family == 'Debian'
 
-# Install configuration
-- name: Create the directory for config files
-  file: path=/etc/dhcp/  state=directory
-  when: ansible_os_family == "Debian"
-
 # Generate configuration
 - name: Generate dhcpd.conf 
   template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }}

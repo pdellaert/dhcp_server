@@ -28,48 +28,48 @@ DHCP server configuration.
 
     # Subnet configuration
     dhcp_subnets:
-      # Required variables example
-      - base: 192.168.1.0
-        netmask: 255.255.255.0
-      # Full list of possibilities
-      - base: 192.168.10.0
-        netmask: 255.255.255.0
-        range_start: 192.168.10.150
-        range_end: 192.168.10.200
-        routers: 192.168.10.1
-        broadcast_address: 192.168.10.255
-        domain_nameservers: 192.168.10.1, 192.168.10.2
-        domain_name: example.org
-        default_lease_time: 3600
-        max_lease_time: 7200
+    # Required variables example
+    - base: 192.168.1.0
+      netmask: 255.255.255.0
+    # Full list of possibilities
+    - base: 192.168.10.0
+      netmask: 255.255.255.0
+      range_start: 192.168.10.150
+      range_end: 192.168.10.200
+      routers: 192.168.10.1
+      broadcast_address: 192.168.10.255
+      domain_nameservers: 192.168.10.1, 192.168.10.2
+      domain_name: example.org
+      default_lease_time: 3600
+      max_lease_time: 7200
 
     # Fixed lease configuration       
     dhcp_hosts:
-      - name: local-server
-        mac_address: "00:11:22:33:44:55"
-        fixed_address: 192.168.10.10
-        default_lease_time: 43200
-        max_lease_time: 86400
+    - name: local-server
+      mac_address: "00:11:22:33:44:55"
+      fixed_address: 192.168.10.10
+      default_lease_time: 43200
+      max_lease_time: 86400
 
     # Class configuration
     dhcp_classes:
-      - name: foo
-        rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
+    - name: foo
+      rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
     
     # Shared network configurations
     dhcp_shared_networks:
-      - name: shared-net
-        subnets:
-          - base: 192.168.100.0
-            netmask: 255.255.255.0
-            routers: 192.168.10.1
-        pools:
-          - range_start: 192.168.100.10
-            range_end: 192.168.100.20
-            rule: 'allow members of "foo"'
-          - range_start: 192.168.110.10
-            range_end: 192.168.110.20
-            rule: 'deny members of "foo"'
+    - name: shared-net
+      subnets:
+      - base: 192.168.100.0
+        netmask: 255.255.255.0
+        routers: 192.168.10.1
+      pools:
+      - range_start: 192.168.100.10
+        range_end: 192.168.100.20
+        rule: 'allow members of "foo"'
+      - range_start: 192.168.110.10
+        range_end: 192.168.110.20
+          rule: 'deny members of "foo"'
 
 Examples
 ========
