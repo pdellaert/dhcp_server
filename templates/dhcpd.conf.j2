@@ -1,0 +1,135 @@
+# dhcpd.conf
+#
+
+# option definitions common to all supported networks...
+{% if dhcp_common_domain is defined %}
+option domain-name "{{ dhcp_common_domain }}";
+{% endif %}
+{% if dhcp_common_nameservers is defined %}
+option domain-name-servers {{ dhcp_common_nameservers }};
+{% endif %}
+
+{% if dhcp_common_default_lease_time is defined %}
+default-lease-time {{ dhcp_common_default_lease_time }};
+{% endif %}
+{% if dhcp_common_max_lease_time is defined %}
+max-lease-time {{ dhcp_common_max_lease_time }};
+{% endif %}
+
+# Use this to enable / disable dynamic dns updates globally.
+{% if dhcp_common_ddns_update_style is defined %}
+ddns-update-style {{ dhcp_common_ddns_update_style }};
+{% endif %}
+
+# If this DHCP server is the official DHCP server for the local
+# network, the authoritative directive should be uncommented.
+{% if dhcp_common_authoritative is defined %}
+authoritative;
+{% endif %}
+
+# Use this to send dhcp log messages to a different log file (you also
+# have to hack syslog.conf to complete the redirection).
+{% if dhcp_common_log_facility is defined %}
+log-facility {{ dhcp_common_log_facility }};
+{% endif %}
+
+# Subnets
+{% for s in dhcp_subnets %}
+subnet {{ s.base }} netmask {{ s.netmask }} {
+{% if s.range_start is defined %}
+  range {{ s.range_start }} {{ s.range_end }};
+{% endif %}
+{% if s.routers is defined %}
+  option routers {{ s.routers }};
+{% endif %}
+{% if s.broadcast_address is defined %}
+  option broadcast-address {{ s.broadcast_address }};
+{% endif %}
+{% if s.domain_nameservers is defined %}
+  option domain-name-servers {{ s.domain_nameservers }};
+{% endif %}
+{% if s.domain_name is defined %}
+  option domain-name "{{ s.domain_name }}";
+{% endif %}
+{% if s.default_lease_time is defined %}
+  default-lease-time {{ s.default_lease_time }};
+{% endif %}
+{% if s.max_lease_time is defined %}
+  max-lease-time {{ s.max_lease_time }};
+{% endif %}
+}
+{% endfor %}
+
+# Hosts
+{% for h in dhcp_hosts %}
+host {{ h.name }} {
+  hardware ethernet {{ h.mac_address }};
+{% if h.fixed_address is defined %}
+  fixed-address {{ h.fixed_address }};
+{% endif %}
+{% if h.routers is defined %}
+  option routers {{ h.routers }};
+{% endif %}
+{% if h.broadcast_address is defined %}
+  option broadcast-address {{ h.broadcast_address }};
+{% endif %}
+{% if h.domain_nameservers is defined %}
+  option domain-name-servers {{ h.domain_nameservers }};
+{% endif %}
+{% if h.domain_name is defined %}
+  option domain-name "{{ h.domain_name }}";
+{% endif %}
+{% if h.default_lease_time is defined %}
+  default-lease-time {{ h.default_lease_time }};
+{% endif %}
+{% if h.max_lease_time is defined %}
+  max-lease-time {{ h.max_lease_time }};
+{% endif %}
+}
+{% endfor %}
+
+# Classes
+{% for c in dhcp_classes %}
+class "{{ c.name }}" {
+  {{ c.rule }};
+}
+{% endfor %}
+
+# Shared networks
+{% for n in dhcp_shared_networks %}
+shared-network {{ n.name }} {
+{% for s in n.subnets %}
+  subnet {{ s.base }} netmask {{ s.netmask }} {
+{% if s.range_start is defined %}
+    range {{ s.range_start }} {{ s.range_end }};
+{% endif %}
+{% if s.routers is defined %}
+    option routers {{ s.routers }};
+{% endif %}
+{% if s.broadcast_address is defined %}
+    option broadcast-address {{ s.broadcast_address }};
+{% endif %}
+{% if s.domain_nameservers is defined %}
+    option domain-name-servers {{ s.domain_nameservers }};
+{% endif %}
+{% if s.domain_name is defined %}
+    option domain-name "{{ s.domain_name }}";
+{% endif %}
+{% if s.default_lease_time is defined %}
+    default-lease-time {{ s.default_lease_time }};
+{% endif %}
+{% if s.max_lease_time is defined %}
+    max-lease-time {{ s.max_lease_time }};
+{% endif %}
+  }
+{% endfor %}
+{% for p in n.pools %}
+  pool {
+    {{ p.rule }};
+{% if p.range_start is defined %}
+    range {{ p.range_start }} {{ p.range_end }};
+{% endif %}
+  }
+{% endfor %}
+}
+{% endfor %}

@@ -1,0 +1,34 @@
+---
+# Loding vars
+- name: Add the OS specific varibles
+  include_vars: "{{ ansible_os_family }}.yml"
+
+# Install DHCP server
+- name: Install the required  packages in Redhat derivatives
+  yum: name={{ dhcp_server_package }} state=installed
+  when: ansible_os_family == 'RedHat'
+
+- name: Install the required packages in Debian derivatives
+  apt: name={{ dhcp_server_package }} state=installed update_cache=yes
+  when: ansible_os_family == 'Debian'
+
+# Install configuration
+- name: Create the directory for config files
+  file: path=/etc/dhcp/  state=directory
+  when: ansible_os_family == "Debian"
+
+# Generate configuration
+- name: Generate dhcpd.conf 
+  template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }}
+  notify:
+    - restart dhcpd
+
+# Generate service configuration
+- name: Generate DHCP service conf
+  template: src=service.conf.{{ ansible_os_family }}.j2 dest={{ dhcp_service_config }} owner=root group=root
+  notify:
+    - restart dhcpd
+
+# Enable DHCP server
+- name: Start the dhcp services DHCP
+  service: name={{ dhcp_service }} state=started enabled=yes
