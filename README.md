@@ -75,6 +75,7 @@ Examples
 ========
 
 1) Install DHCP server on interface eth0 with one simple subnet:
+
     - hosts: all
       roles:
       - role: dhcp_server
