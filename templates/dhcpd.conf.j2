@@ -133,3 +133,15 @@ shared-network {{ n.name }} {
 {% endfor %}
 }
 {% endfor %}
+
+{% if dhcp_ifelse is defined %}
+# If else clauses
+{% for ie in dhcp_ifelse %}
+if {{ ie.condition }} {
+    {{ ie.val }}
+}{% if ie.else is defined %}{% for e in ie.else %} else {
+    {{ e.val }}
+}{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
