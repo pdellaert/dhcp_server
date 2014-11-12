@@ -71,6 +71,14 @@ DHCP server configuration.
         range_end: 192.168.110.20
           rule: 'deny members of "foo"'
 
+    # Custom if else clause
+      dhcp_ifelse:
+      - condition: 'exists user-class and option user-class = "iPXE"'
+        val: 'filename "http://my.web.server/real_boot_script.php";'
+        else:
+          - val: 'filename "pxeboot.0";'
+          - val: 'filename "pxeboot.1";'
+
 Examples
 ========
 
