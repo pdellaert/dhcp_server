@@ -39,6 +39,18 @@ log-facility {{ dhcp_common_log_facility }};
 option {{ o }};
 {% endfor %}
 
+# Classes
+{% for c in dhcp_classes %}
+class "{{ c.name }}" {
+  {{ c.rule }};
+{% if c.options is defined %}
+{% for i in c.options %}
+  option {{ i.opt }};
+{% endfor %}
+{% endif %}
+}
+{% endfor %}
+
 # Subnets
 {% for s in dhcp_subnets %}
 subnet {{ s.base }} netmask {{ s.netmask }} {
@@ -103,18 +115,6 @@ host {{ h.name }} {
 {% endif %}
 {% if h.max_lease_time is defined %}
   max-lease-time {{ h.max_lease_time }};
-{% endif %}
-}
-{% endfor %}
-
-# Classes
-{% for c in dhcp_classes %}
-class "{{ c.name }}" {
-  {{ c.rule }};
-{% if c.options is defined %}
-{% for i in c.options %}
-  option {{ i.opt }};
-{% endfor %}
 {% endif %}
 }
 {% endfor %}
