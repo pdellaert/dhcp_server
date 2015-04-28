@@ -34,6 +34,11 @@ authoritative;
 log-facility {{ dhcp_common_log_facility }};
 {% endif %}
 
+#DHCP options
+{% for o in dhcp_common_options %}
+option {{ o }};
+{% endfor %}
+
 # Subnets
 {% for s in dhcp_subnets %}
 subnet {{ s.base }} netmask {{ s.netmask }} {

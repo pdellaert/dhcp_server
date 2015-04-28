@@ -25,6 +25,8 @@ DHCP server configuration.
     dhcp_common_ddns_update_style: none
     dhcp_common_authoritative: true
     dhcp_common_log_facility: local7
+    dhcp_common_options:
+    - opt66 code 66 = string
 
     # Subnet configuration
     dhcp_subnets:
@@ -51,7 +53,7 @@ DHCP server configuration.
         range_end: 192.168.110.20
         rule: 'deny members of "foo"'
 
-    # Fixed lease configuration       
+    # Fixed lease configuration
     dhcp_hosts:
     - name: local-server
       mac_address: "00:11:22:33:44:55"
