@@ -52,6 +52,9 @@ subnet {{ s.base }} netmask {{ s.netmask }} {
 {% if s.domain_name is defined %}
   option domain-name "{{ s.domain_name }}";
 {% endif %}
+{% if s.ntp_servers is defined %}
+  option ntp-servers {{ s.ntp_servers }};
+{% endif %}
 {% if s.default_lease_time is defined %}
   default-lease-time {{ s.default_lease_time }};
 {% endif %}

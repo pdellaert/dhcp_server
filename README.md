@@ -40,6 +40,7 @@ DHCP server configuration.
       broadcast_address: 192.168.10.255
       domain_nameservers: 192.168.10.1, 192.168.10.2
       domain_name: example.org
+      ntp_servers: pool.ntp.org
       default_lease_time: 3600
       max_lease_time: 7200
 
