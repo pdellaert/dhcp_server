@@ -111,6 +111,11 @@ host {{ h.name }} {
 {% for c in dhcp_classes %}
 class "{{ c.name }}" {
   {{ c.rule }};
+{% if c.options is defined %}
+{% for i in c.options %}
+  option {{ i.opt }};
+{% endfor %}
+{% endif %}
 }
 {% endfor %}
 

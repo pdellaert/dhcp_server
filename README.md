@@ -65,7 +65,13 @@ DHCP server configuration.
     dhcp_classes:
     - name: foo
       rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
-    
+    - name: CiscoSPA
+      rule: 'match if (( substring (option vendor-class-identifier,0,13) = "Cisco SPA504G" ) or
+             ( substring (option vendor-class-identifier,0,13) = "Cisco SPA303G" ))'
+      options:
+      - opt: 'opt66 "http://utils.opentech.local/cisco/cisco.php?mac=$MAU"'
+      - opt: 'time-offset 21600'
+
     # Shared network configurations
     dhcp_shared_networks:
     - name: shared-net
