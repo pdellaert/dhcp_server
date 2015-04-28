@@ -20,6 +20,9 @@ galaxy_info:
       - quantal
       - raring
       - saucy
+   - name Archlinux
+     versions:
+       - all
   categories:
    - system
    - networking
