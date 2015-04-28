@@ -43,6 +43,13 @@ DHCP server configuration.
       ntp_servers: pool.ntp.org
       default_lease_time: 3600
       max_lease_time: 7200
+      pools:
+      - range_start: 192.168.100.10
+        range_end: 192.168.100.20
+        rule: 'allow members of "foo"'
+      - range_start: 192.168.110.10
+        range_end: 192.168.110.20
+        rule: 'deny members of "foo"'
 
     # Fixed lease configuration       
     dhcp_hosts:
@@ -70,7 +77,7 @@ DHCP server configuration.
         rule: 'allow members of "foo"'
       - range_start: 192.168.110.10
         range_end: 192.168.110.20
-          rule: 'deny members of "foo"'
+        rule: 'deny members of "foo"'
 
     # Custom if else clause
       dhcp_ifelse:
