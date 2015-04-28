@@ -126,9 +126,7 @@ shared-network {{ n.name }} {
 {% for p in n.pools %}
   pool {
     {{ p.rule }};
-{% if p.range_start is defined %}
     range {{ p.range_start }} {{ p.range_end }};
-{% endif %}
   }
 {% endfor %}
 }
