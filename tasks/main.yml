@@ -18,7 +18,7 @@
 
 # Generate configuration
 - name: Generate dhcpd.conf
-  template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }} owner=root group=root mode=0644
+  template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }} owner=root group=root mode=0644 validate='/usr/sbin/dhcpd -t -cf %s'
   notify:
     - restart dhcpd
 
