@@ -25,6 +25,8 @@ DHCP server configuration.
     dhcp_common_ddns_update_style: none
     dhcp_common_authoritative: true
     dhcp_common_log_facility: local7
+    dhcp_common_options:
+    - opt66 code 66 = string
 
     # Subnet configuration
     dhcp_subnets:
@@ -40,10 +42,18 @@ DHCP server configuration.
       broadcast_address: 192.168.10.255
       domain_nameservers: 192.168.10.1, 192.168.10.2
       domain_name: example.org
+      ntp_servers: pool.ntp.org
       default_lease_time: 3600
       max_lease_time: 7200
+      pools:
+      - range_start: 192.168.100.10
+        range_end: 192.168.100.20
+        rule: 'allow members of "foo"'
+      - range_start: 192.168.110.10
+        range_end: 192.168.110.20
+        rule: 'deny members of "foo"'
 
-    # Fixed lease configuration       
+    # Fixed lease configuration
     dhcp_hosts:
     - name: local-server
       mac_address: "00:11:22:33:44:55"
@@ -55,7 +65,13 @@ DHCP server configuration.
     dhcp_classes:
     - name: foo
       rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
-    
+    - name: CiscoSPA
+      rule: 'match if (( substring (option vendor-class-identifier,0,13) = "Cisco SPA504G" ) or
+             ( substring (option vendor-class-identifier,0,13) = "Cisco SPA303G" ))'
+      options:
+      - opt: 'opt66 "http://utils.opentech.local/cisco/cisco.php?mac=$MAU"'
+      - opt: 'time-offset 21600'
+
     # Shared network configurations
     dhcp_shared_networks:
     - name: shared-net
@@ -69,7 +85,7 @@ DHCP server configuration.
         rule: 'allow members of "foo"'
       - range_start: 192.168.110.10
         range_end: 192.168.110.20
-          rule: 'deny members of "foo"'
+        rule: 'deny members of "foo"'
 
     # Custom if else clause
       dhcp_ifelse:
