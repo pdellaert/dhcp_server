@@ -13,7 +13,7 @@ Role Variables
 --------------
 
 The variables that can be passed to this role and a brief description about
-them are as follows. These are all based on the configuration variales of the
+them are as follows. These are all based on the configuration variables of the
 DHCP server configuration.
 
     # Basic configuration information
