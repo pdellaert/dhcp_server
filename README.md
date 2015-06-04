@@ -13,7 +13,7 @@ Role Variables
 --------------
 
 The variables that can be passed to this role and a brief description about
-them are as follows. These are all based on the configuration variales of the
+them are as follows. These are all based on the configuration variables of the
 DHCP server configuration.
 
     # Basic configuration information
@@ -27,6 +27,8 @@ DHCP server configuration.
     dhcp_common_log_facility: local7
     dhcp_common_options:
     - opt66 code 66 = string
+    dhcp_common_parameters:
+    - filename "pxelinux.0"
 
     # Subnet configuration
     dhcp_subnets:
@@ -49,9 +51,13 @@ DHCP server configuration.
       - range_start: 192.168.100.10
         range_end: 192.168.100.20
         rule: 'allow members of "foo"'
+        parameters:
+        - filename "pxelinux.0"
       - range_start: 192.168.110.10
         range_end: 192.168.110.20
         rule: 'deny members of "foo"'
+      parameters:
+      - filename "pxelinux.0"
 
     # Fixed lease configuration
     dhcp_hosts:
@@ -60,6 +66,8 @@ DHCP server configuration.
       fixed_address: 192.168.10.10
       default_lease_time: 43200
       max_lease_time: 86400
+      parameters:
+      - filename "pxelinux.0"
 
     # Class configuration
     dhcp_classes:
@@ -79,10 +87,14 @@ DHCP server configuration.
       - base: 192.168.100.0
         netmask: 255.255.255.0
         routers: 192.168.10.1
+      parameters:
+      - filename "pxelinux.0"
       pools:
       - range_start: 192.168.100.10
         range_end: 192.168.100.20
         rule: 'allow members of "foo"'
+        parameters:
+        - filename "pxelinux.0"
       - range_start: 192.168.110.10
         range_end: 192.168.110.20
         rule: 'deny members of "foo"'

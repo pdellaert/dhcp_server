@@ -39,6 +39,13 @@ log-facility {{ dhcp_common_log_facility }};
 option {{ o }};
 {% endfor %}
 
+#DHCP parameters
+{% if dhcp_common_parameters is defined %}
+{% for p in dhcp_common_parameters %}
+{{ p }};
+{% endfor %}
+{% endif %}
+
 # Classes
 {% for c in dhcp_classes %}
 class "{{ c.name }}" {
@@ -85,7 +92,17 @@ subnet {{ s.base }} netmask {{ s.netmask }} {
     {{ p.rule }};
 {% endif %}
     range {{ p.range_start }} {{ p.range_end }};
+{% if p.parameters is defined %}
+{% for param in p.parameters %}
+    {{ param }};
+{% endfor %}
+{% endif %}
   }
+{% endfor %}
+{% endif %}
+{% if s.parameters is defined %}
+{% for p in s.parameters %}
+  {{ p }};
 {% endfor %}
 {% endif %}
 }
@@ -116,6 +133,11 @@ host {{ h.name }} {
 {% if h.max_lease_time is defined %}
   max-lease-time {{ h.max_lease_time }};
 {% endif %}
+{% if h.parameters is defined %}
+{% for p in h.parameters %}
+  {{ p }};
+{% endfor %}
+{% endif %}
 }
 {% endfor %}
 
@@ -145,14 +167,29 @@ shared-network {{ n.name }} {
 {% if s.max_lease_time is defined %}
     max-lease-time {{ s.max_lease_time }};
 {% endif %}
+{% if s.parameters is defined %}
+{% for param in s.parameters %}
+    {{ param }};
+{% endfor %}
+{% endif %}
   }
 {% endfor %}
 {% for p in n.pools %}
   pool {
     {{ p.rule }};
     range {{ p.range_start }} {{ p.range_end }};
+{% if p.parameters is defined %}
+{% for param in p.parameters %}
+    {{ param }};
+{% endfor %}
+{% endif %}
   }
 {% endfor %}
+{% if n.parameters is defined %}
+{% for p in n.parameters %}
+  {{ p }};
+{% endfor %}
+{% endif %}
 }
 {% endfor %}
 
