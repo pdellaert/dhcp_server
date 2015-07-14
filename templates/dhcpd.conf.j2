@@ -41,8 +41,8 @@ option {{ o }};
 {% endfor %}
 {% endif %}
 
-#DHCP parameters
 {% if dhcp_common_parameters is defined %}
+#DHCP parameters
 {% for p in dhcp_common_parameters %}
 {{ p }};
 {% endfor %}
