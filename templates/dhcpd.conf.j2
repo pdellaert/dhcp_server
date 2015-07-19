@@ -34,13 +34,15 @@ authoritative;
 log-facility {{ dhcp_common_log_facility }};
 {% endif %}
 
+{% if dhcp_common_options is defined %}
 #DHCP options
 {% for o in dhcp_common_options %}
 option {{ o }};
 {% endfor %}
+{% endif %}
 
-#DHCP parameters
 {% if dhcp_common_parameters is defined %}
+#DHCP parameters
 {% for p in dhcp_common_parameters %}
 {{ p }};
 {% endfor %}
