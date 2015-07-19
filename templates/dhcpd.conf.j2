@@ -2,6 +2,10 @@
 # Managed by Ansible
 # Do not edit manually
 
+{% if dhcp_omapi_port is defined %}
+omapi-port {{ dhcp_omapi_port }};
+{% endif %}
+
 # option definitions common to all supported networks...
 {% if dhcp_common_domain is defined %}
 option domain-name "{{ dhcp_common_domain }}";
