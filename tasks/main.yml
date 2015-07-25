@@ -16,7 +16,29 @@
   pacman: name={{ dhcp_server_package }} state=installed update_cache=yes
   when: ansible_os_family == 'Archlinux'
 
+# Configuring AppArmor if requested
+- name: Check if the /etc/apparmor.d/local folder exists
+  stat: path=/etc/apparmor.d/local
+  when: configure_apparmor
+  register: apparmor_local
+
+- name: Configure AppArmor to allow dhcpd access to temporary ansible files for configuration checking
+  copy: src=apparmor/usr.sbin.dhcpd dest=/etc/apparmor.d/local/usr.sbin.dhcpd owner=root group=root mode=0644
+  when: configure_apparmor and apparmor_local.stat.exists
+
+- name: Restart AppArmor
+  service: name={{ apparmor_service }} state=restarted
+  when: configure_apparmor
+
 # Generate configuration
+- name: Check if there is an old config file
+  stat: path={{ dhcp_server_config }}
+  register: old_config
+
+- name: Backup old config
+  command: mv {{ dhcp_server_config }} {{ dhcp_server_config }}-orig
+  when: old_config.stat.exists
+
 - name: Generate dhcpd.conf
   template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }} owner=root group=root mode=0644 validate='/usr/sbin/dhcpd -t -cf %s'
   notify:
@@ -32,4 +54,3 @@
 # Enable DHCP server
 - name: Start the dhcp services DHCP
   service: name={{ dhcp_service }} state=started enabled=yes
-  

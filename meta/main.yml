@@ -20,6 +20,7 @@ galaxy_info:
       - quantal
       - raring
       - saucy
+      - trusty
    - name: Archlinux
      versions:
        - all

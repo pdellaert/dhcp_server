@@ -9,12 +9,24 @@ Requirements
 This role requires Ansible 1.4 or higher and platform requirements are listed
 in the metadata file.
 
+Ubuntu AppArmor
+---------------
+Since Ubuntu 14.04, AppArmor is configured to not allow dhcpd to access files outside a certain list of paths.
+This prevents Ansible from running the check command on the template. The check is used to validate the correctness of the config file generated.
+
+To prevent this, you can either disable AppArmor, manually configure it in such a way that it allows access to `/root/.ansible/tmp` for dhcpd or you can let this role do that for you:
+
+If you specify the `configure_apparmor: true` variable for your host. This role will overwrite the `/etc/apparmor.d/local/usr.bin.dhcpd` file and specifically allow read-only access to `/root/.ansible/tmp`. It will first check if this file exists, if it does not, it will not do anything.
+
 Role Variables
 --------------
 
 The variables that can be passed to this role and a brief description about
 them are as follows. These are all based on the configuration variables of the
 DHCP server configuration.
+
+    # AppArmor configuration - important for Ubuntu 14.04
+    configure_apparmor: true
 
     # Basic configuration information
     dhcp_interfaces: eth0
