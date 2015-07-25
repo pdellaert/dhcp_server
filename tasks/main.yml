@@ -31,14 +31,6 @@
   when: configure_apparmor
 
 # Generate configuration
-- name: Check if there is an old config file
-  stat: path={{ dhcp_server_config }}
-  register: old_config
-
-- name: Backup old config
-  command: mv {{ dhcp_server_config }} {{ dhcp_server_config }}-orig
-  when: old_config.stat.exists
-
 - name: Generate dhcpd.conf
   template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }} owner=root group=root mode=0644 validate='/usr/sbin/dhcpd -t -cf %s'
   notify:
