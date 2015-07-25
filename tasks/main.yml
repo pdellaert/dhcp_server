@@ -25,10 +25,10 @@
 - name: Configure AppArmor to allow dhcpd access to temporary ansible files for configuration checking
   copy: src=apparmor/usr.sbin.dhcpd dest=/etc/apparmor.d/local/usr.sbin.dhcpd owner=root group=root mode=0644
   when: configure_apparmor and apparmor_local.stat.exists
+  notify:
+    - restart apparmor
 
-- name: Restart AppArmor
-  service: name={{ apparmor_service }} state=restarted
-  when: configure_apparmor
+- meta: flush_handlers
 
 # Generate configuration
 - name: Generate dhcpd.conf
