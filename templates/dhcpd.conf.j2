@@ -68,7 +68,7 @@ class "{{ c.name }}" {
 {% for s in dhcp_subnets %}
 subnet {{ s.base }} netmask {{ s.netmask }} {
 {% if s.interface is defined %}
-  interface {{ s.interface }};
+  interface "{{ s.interface }}";
 {% endif %}
 {% if s.range_start is defined %}
   range {{ s.range_start }} {{ s.range_end }};
@@ -156,7 +156,7 @@ shared-network {{ n.name }} {
 {% for s in n.subnets %}
   subnet {{ s.base }} netmask {{ s.netmask }} {
 {% if s.interface is defined %}
-  interface {{ s.interface }};
+  interface "{{ s.interface }}";
 {% endif %}
 {% if s.range_start is defined %}
     range {{ s.range_start }} {{ s.range_end }};
