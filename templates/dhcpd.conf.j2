@@ -52,6 +52,7 @@ option {{ o }};
 {% endfor %}
 {% endif %}
 
+{% if dhcp_classes is defined %}
 # Classes
 {% for c in dhcp_classes %}
 class "{{ c.name }}" {
@@ -63,6 +64,7 @@ class "{{ c.name }}" {
 {% endif %}
 }
 {% endfor %}
+{% endif %}
 
 # Subnets
 {% for s in dhcp_subnets %}
@@ -150,6 +152,7 @@ host {{ h.name }} {
 }
 {% endfor %}
 
+{% if dhcp_shared_networks is defined %}
 # Shared networks
 {% for n in dhcp_shared_networks %}
 shared-network {{ n.name }} {
@@ -204,6 +207,7 @@ shared-network {{ n.name }} {
 {% endif %}
 }
 {% endfor %}
+{% endif %}
 
 {% if dhcp_ifelse is defined %}
 # If else clauses
