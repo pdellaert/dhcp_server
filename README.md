@@ -18,6 +18,11 @@ To prevent this, you can either disable AppArmor, manually configure it in such 
 
 If you specify the `configure_apparmor: true` variable for your host. This role will overwrite the `/etc/apparmor.d/local/usr.bin.dhcpd` file and specifically allow read-only access to `/root/.ansible/tmp`. It will first check if this file exists, if it does not, it will not do anything.
 
+Difference between global and subnet interface options
+-------------------------------------------------------
+Global dhcp_intefaces option makes listen on defined interfaces all subnets. Interface per subnet definition allows listen as much subnets as you want.
+Global definition does not work on Systemd OS (ArchLinux, CentOS7, Fedora, etc), listen by default on all interfaces.
+
 Role Variables
 --------------
 
@@ -50,6 +55,7 @@ DHCP server configuration.
     # Full list of possibilities
     - base: 192.168.10.0
       netmask: 255.255.255.0
+      interface: vlan100
       range_start: 192.168.10.150
       range_end: 192.168.10.200
       routers: 192.168.10.1
@@ -87,9 +93,9 @@ DHCP server configuration.
       rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
     - name: CiscoSPA
       rule: 'match if (( substring (option vendor-class-identifier,0,13) = "Cisco SPA504G" ) or
-             ( substring (option vendor-class-identifier,0,13) = "Cisco SPA303G" ))'
+             ( substring (option vendor-class-identifier,0,12) = "Cisco SPA303" ))'
       options:
-      - opt: 'opt66 "http://utils.opentech.local/cisco/cisco.php?mac=$MAU"'
+      - opt: 'opt66 "http://distrib.local/cisco.php?mac=$MAU"'
       - opt: 'time-offset 21600'
 
     # Shared network configurations
@@ -143,6 +149,33 @@ Examples
           routers: 192.168.10.1
 
 
+2) Install DHCP server with subnet per interface:
+
+    - hosts: all
+      roles:
+      - role: dhcp_server
+        dhcp_common_domain: example.org
+        dhcp_common_nameservers: ns1.example.org, ns2.example.org
+        dhcp_common_default_lease_time: 600
+        dhcp_common_max_lease_time: 7200
+        dhcp_common_ddns_update_style: none
+        dhcp_common_authoritative: true
+        dhcp_common_log_facility: local7
+        dhcp_subnets:
+        - base: 192.168.10.0
+          netmask: 255.255.255.0
+          interface: vlan10
+          range_start: 192.168.10.150
+          range_end: 192.168.10.200
+          routers: 192.168.10.1
+        - base: 192.168.20.0
+          netmask: 255.255.255.0
+          interface: vlan20
+          range_start: 192.168.20.150
+          range_end: 192.168.20.200
+          routers: 192.168.20.1
+
+
 Dependencies
 ------------
 
@@ -157,5 +190,3 @@ Author Information
 ------------------
 
 Philippe Dellaert
-
-
