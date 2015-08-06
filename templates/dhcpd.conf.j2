@@ -155,6 +155,9 @@ host {{ h.name }} {
 shared-network {{ n.name }} {
 {% for s in n.subnets %}
   subnet {{ s.base }} netmask {{ s.netmask }} {
+{% if s.interface is defined %}
+  interface {{ s.interface }};
+{% endif %}
 {% if s.range_start is defined %}
     range {{ s.range_start }} {{ s.range_end }};
 {% endif %}

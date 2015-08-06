@@ -104,6 +104,7 @@ DHCP server configuration.
       subnets:
       - base: 192.168.100.0
         netmask: 255.255.255.0
+        interface: vlan100
         routers: 192.168.10.1
       parameters:
       - filename "pxelinux.0"
