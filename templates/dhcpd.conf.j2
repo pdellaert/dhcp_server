@@ -176,6 +176,9 @@ shared-network {{ n.name }} {
 {% if s.domain_name is defined %}
     option domain-name "{{ s.domain_name }}";
 {% endif %}
+{% if s.ntp_servers is defined %}
+    option ntp-servers {{ s.ntp_servers }};
+{% endif %}
 {% if s.default_lease_time is defined %}
     default-lease-time {{ s.default_lease_time }};
 {% endif %}
@@ -189,6 +192,7 @@ shared-network {{ n.name }} {
 {% endif %}
   }
 {% endfor %}
+{% if n.pools is defined %}
 {% for p in n.pools %}
   pool {
     {{ p.rule }};
@@ -200,6 +204,7 @@ shared-network {{ n.name }} {
 {% endif %}
   }
 {% endfor %}
+{% endif %}
 {% if n.parameters is defined %}
 {% for p in n.parameters %}
   {{ p }};
