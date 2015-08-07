@@ -6,8 +6,7 @@ This role installs and configures a DHCP server.
 Requirements
 ------------
 
-This role requires Ansible 1.4 or higher and platform requirements are listed
-in the metadata file.
+This role requires Ansible 1.4 or higher and platform requirements are listed in the metadata file.
 
 Ubuntu AppArmor
 ---------------
@@ -20,8 +19,8 @@ If you specify the `configure_apparmor: true` variable for your host. This role 
 
 Difference between global and subnet interface options
 -------------------------------------------------------
-Global dhcp_intefaces option makes listen on defined interfaces all subnets. Interface per subnet definition allows listen as much subnets as you want.
-Global definition does not work on Systemd OS (ArchLinux, CentOS7, Fedora, etc), listen by default on all interfaces.
+Global dhcp_interfaces option makes listen on defined interfaces all subnets. Interface per subnet definition allows listen as much subnets as you want.
+Global dhcp_interfaces option does not work on systemd distros (ArchLinux, CentOS 7, Fedora), listen by default on interface with declared subnet. You cat rewrite systemd service, but is dirty. Instead this, describe interfaces in configuration. Is modern and properly.
 
 Role Variables
 --------------
