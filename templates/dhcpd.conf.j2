@@ -5,54 +5,53 @@
 {% if dhcp_omapi_port is defined %}
 omapi-port {{ dhcp_omapi_port }};
 {% endif %}
-
 # option definitions common to all supported networks...
 {% if dhcp_common_domain is defined %}
+
 option domain-name "{{ dhcp_common_domain }}";
 {% endif %}
 {% if dhcp_common_nameservers is defined %}
 option domain-name-servers {{ dhcp_common_nameservers }};
 {% endif %}
-
 {% if dhcp_common_default_lease_time is defined %}
 default-lease-time {{ dhcp_common_default_lease_time }};
 {% endif %}
 {% if dhcp_common_max_lease_time is defined %}
 max-lease-time {{ dhcp_common_max_lease_time }};
 {% endif %}
-
 {% if dhcp_common_ddns_update_style is defined %}
+
 # Use this to enable / disable dynamic dns updates globally.
 ddns-update-style {{ dhcp_common_ddns_update_style }};
 {% endif %}
-
 {% if dhcp_common_authoritative is defined %}
+
 # If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
 authoritative;
 {% endif %}
-
 {% if dhcp_common_log_facility is defined %}
+
 # Use this to send dhcp log messages to a different log file (you also
 # have to hack syslog.conf to complete the redirection).
 log-facility {{ dhcp_common_log_facility }};
 {% endif %}
-
 {% if dhcp_common_options is defined %}
+
 #DHCP options
 {% for o in dhcp_common_options %}
 option {{ o }};
 {% endfor %}
 {% endif %}
-
 {% if dhcp_common_parameters is defined %}
+
 #DHCP parameters
 {% for p in dhcp_common_parameters %}
 {{ p }};
 {% endfor %}
 {% endif %}
-
 {% if dhcp_classes is defined %}
+
 # Classes
 {% for c in dhcp_classes %}
 class "{{ c.name }}" {
