@@ -185,6 +185,21 @@ shared-network {{ n.name }} {
 {% if s.max_lease_time is defined %}
     max-lease-time {{ s.max_lease_time }};
 {% endif %}
+{% if s.pools is defined %}
+{% for p in s.pools %}
+    pool {
+{% if p.rule is defined %}
+      {{ p.rule }};
+{% endif %}
+      range {{ p.range_start }} {{ p.range_end }};
+{% if p.parameters is defined %}
+{% for param in p.parameters %}
+      {{ param }};
+{% endfor %}
+{% endif %}
+    }
+{% endfor %}
+{% endif %}
 {% if s.parameters is defined %}
 {% for param in s.parameters %}
     {{ param }};
