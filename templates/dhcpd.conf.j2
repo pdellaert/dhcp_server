@@ -66,6 +66,7 @@ class "{{ c.name }}" {
 {% endfor %}
 {% endif %}
 
+{% if dhcp_subnets is defined %}
 # Subnets
 {% for s in dhcp_subnets %}
 subnet {{ s.base }} netmask {{ s.netmask }} {
@@ -118,7 +119,9 @@ subnet {{ s.base }} netmask {{ s.netmask }} {
 {% endif %}
 }
 {% endfor %}
+{% endif %}
 
+{% if dhcp_hosts is defined %}
 # Hosts
 {% for h in dhcp_hosts %}
 host {{ h.name }} {
@@ -151,6 +154,7 @@ host {{ h.name }} {
 {% endif %}
 }
 {% endfor %}
+{% endif %}
 
 {% if dhcp_shared_networks is defined %}
 # Shared networks
