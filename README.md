@@ -101,10 +101,10 @@ DHCP server configuration.
     # Shared network configurations
     dhcp_shared_networks:
     - name: shared-net
+      interface: vlan100
       subnets:
       - base: 192.168.100.0
         netmask: 255.255.255.0
-        interface: vlan100
         routers: 192.168.10.1
       parameters:
       - filename "pxelinux.0"
@@ -175,6 +175,49 @@ Examples
           range_start: 192.168.20.150
           range_end: 192.168.20.200
           routers: 192.168.20.1
+
+
+3) Install DHCP server with one subnet on interface vlan10 and with shared network on interface vlan20
+
+    - hosts: all
+      roles:
+      - role: dhcp_server
+        dhcp_common_default_lease_time: 600
+        dhcp_common_max_lease_time: 7200
+        dhcp_common_ddns_update_style: none
+        dhcp_common_authoritative: true
+        dhcp_common_log_facility: local7
+        dhcp_subnets:
+        - base: 192.168.10.0
+          netmask: 255.255.255.0
+          interface: vlan10
+          domain_nameserver: 192.168.10.1
+          domain_name: example.local
+          range_start: 192.168.10.150
+          range_end: 192.168.10.200
+          routers: 192.168.10.1
+        dhcp_shared_networks:
+        - name: sharednet
+          interface: vlan20
+          subnets:
+          - base: 10.7.0.0
+            netmask: 255.255.255.0
+            routers: 10.7.0.1
+            domain_nameserver: 10.7.0.1
+            domain_name: example.public0
+            ntp_servers: 10.7.0.1
+            pools:
+            - range_start: 10.7.0.2
+              range_end: 10.7.0.254
+          - base: 10.8.0.0
+            netmask: 255.255.255.0
+            routers: 10.8.0.1
+            domain_nameserver: 10.8.0.1
+            domain_name: example.public1
+            ntp_servers: 10.8.0.1
+            pools:
+            - range_start: 10.8.0.2
+              range_end: 10.8.0.254
 
 
 Dependencies
