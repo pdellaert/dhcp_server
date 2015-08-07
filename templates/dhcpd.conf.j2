@@ -65,6 +65,41 @@ class "{{ c.name }}" {
 {% endfor %}
 {% endif %}
 
+{% if dhcp_hosts is defined %}
+# Hosts
+{% for h in dhcp_hosts %}
+host {{ h.name }} {
+  hardware ethernet {{ h.mac_address }};
+{% if h.fixed_address is defined %}
+  fixed-address {{ h.fixed_address }};
+{% endif %}
+{% if h.routers is defined %}
+  option routers {{ h.routers }};
+{% endif %}
+{% if h.broadcast_address is defined %}
+  option broadcast-address {{ h.broadcast_address }};
+{% endif %}
+{% if h.domain_nameservers is defined %}
+  option domain-name-servers {{ h.domain_nameservers }};
+{% endif %}
+{% if h.domain_name is defined %}
+  option domain-name "{{ h.domain_name }}";
+{% endif %}
+{% if h.default_lease_time is defined %}
+  default-lease-time {{ h.default_lease_time }};
+{% endif %}
+{% if h.max_lease_time is defined %}
+  max-lease-time {{ h.max_lease_time }};
+{% endif %}
+{% if h.parameters is defined %}
+{% for p in h.parameters %}
+  {{ p }};
+{% endfor %}
+{% endif %}
+}
+{% endfor %}
+{% endif %}
+
 {% if dhcp_subnets is defined %}
 # Subnets
 {% for s in dhcp_subnets %}
@@ -113,41 +148,6 @@ subnet {{ s.base }} netmask {{ s.netmask }} {
 {% endif %}
 {% if s.parameters is defined %}
 {% for p in s.parameters %}
-  {{ p }};
-{% endfor %}
-{% endif %}
-}
-{% endfor %}
-{% endif %}
-
-{% if dhcp_hosts is defined %}
-# Hosts
-{% for h in dhcp_hosts %}
-host {{ h.name }} {
-  hardware ethernet {{ h.mac_address }};
-{% if h.fixed_address is defined %}
-  fixed-address {{ h.fixed_address }};
-{% endif %}
-{% if h.routers is defined %}
-  option routers {{ h.routers }};
-{% endif %}
-{% if h.broadcast_address is defined %}
-  option broadcast-address {{ h.broadcast_address }};
-{% endif %}
-{% if h.domain_nameservers is defined %}
-  option domain-name-servers {{ h.domain_nameservers }};
-{% endif %}
-{% if h.domain_name is defined %}
-  option domain-name "{{ h.domain_name }}";
-{% endif %}
-{% if h.default_lease_time is defined %}
-  default-lease-time {{ h.default_lease_time }};
-{% endif %}
-{% if h.max_lease_time is defined %}
-  max-lease-time {{ h.max_lease_time }};
-{% endif %}
-{% if h.parameters is defined %}
-{% for p in h.parameters %}
   {{ p }};
 {% endfor %}
 {% endif %}
