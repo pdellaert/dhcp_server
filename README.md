@@ -6,8 +6,7 @@ This role installs and configures a DHCP server.
 Requirements
 ------------
 
-This role requires Ansible 1.4 or higher and platform requirements are listed
-in the metadata file.
+This role requires Ansible 1.4 or higher and platform requirements are listed in the metadata file.
 
 Ubuntu AppArmor
 ---------------
@@ -17,6 +16,11 @@ This prevents Ansible from running the check command on the template. The check 
 To prevent this, you can either disable AppArmor, manually configure it in such a way that it allows access to `/root/.ansible/tmp` for dhcpd or you can let this role do that for you:
 
 If you specify the `configure_apparmor: true` variable for your host. This role will overwrite the `/etc/apparmor.d/local/usr.bin.dhcpd` file and specifically allow read-only access to `/root/.ansible/tmp`. It will first check if this file exists, if it does not, it will not do anything.
+
+Difference between global and subnet interface options
+-------------------------------------------------------
+Global dhcp_interfaces option makes listen on defined interfaces all subnets. Interface per subnet definition allows listen as much subnets as you want.
+Global dhcp_interfaces option does not work on systemd distros (ArchLinux, CentOS 7, Fedora), listen by default on interface with declared subnet. You cat rewrite systemd service, but is dirty. Instead this, describe interfaces in configuration. Is modern and properly.
 
 Role Variables
 --------------
@@ -50,6 +54,7 @@ DHCP server configuration.
     # Full list of possibilities
     - base: 192.168.10.0
       netmask: 255.255.255.0
+      interface: vlan100
       range_start: 192.168.10.150
       range_end: 192.168.10.200
       routers: 192.168.10.1
@@ -87,14 +92,15 @@ DHCP server configuration.
       rule: 'match if substring (option vendor-class-identifier, 0, 4) = "SUNW"'
     - name: CiscoSPA
       rule: 'match if (( substring (option vendor-class-identifier,0,13) = "Cisco SPA504G" ) or
-             ( substring (option vendor-class-identifier,0,13) = "Cisco SPA303G" ))'
+             ( substring (option vendor-class-identifier,0,12) = "Cisco SPA303" ))'
       options:
-      - opt: 'opt66 "http://utils.opentech.local/cisco/cisco.php?mac=$MAU"'
+      - opt: 'opt66 "http://distrib.local/cisco.php?mac=$MAU"'
       - opt: 'time-offset 21600'
 
     # Shared network configurations
     dhcp_shared_networks:
     - name: shared-net
+      interface: vlan100
       subnets:
       - base: 192.168.100.0
         netmask: 255.255.255.0
@@ -143,6 +149,76 @@ Examples
           routers: 192.168.10.1
 
 
+2) Install DHCP server with subnet per interface:
+
+    - hosts: all
+      roles:
+      - role: dhcp_server
+        dhcp_common_domain: example.org
+        dhcp_common_nameservers: ns1.example.org, ns2.example.org
+        dhcp_common_default_lease_time: 600
+        dhcp_common_max_lease_time: 7200
+        dhcp_common_ddns_update_style: none
+        dhcp_common_authoritative: true
+        dhcp_common_log_facility: local7
+        dhcp_subnets:
+        - base: 192.168.10.0
+          netmask: 255.255.255.0
+          interface: vlan10
+          range_start: 192.168.10.150
+          range_end: 192.168.10.200
+          routers: 192.168.10.1
+        - base: 192.168.20.0
+          netmask: 255.255.255.0
+          interface: vlan20
+          range_start: 192.168.20.150
+          range_end: 192.168.20.200
+          routers: 192.168.20.1
+
+
+3) Install DHCP server with one subnet on interface vlan10 and with shared network on interface vlan20
+
+    - hosts: all
+      roles:
+      - role: dhcp_server
+        dhcp_common_default_lease_time: 600
+        dhcp_common_max_lease_time: 7200
+        dhcp_common_ddns_update_style: none
+        dhcp_common_authoritative: true
+        dhcp_common_log_facility: local7
+        dhcp_subnets:
+        - base: 192.168.10.0
+          netmask: 255.255.255.0
+          interface: vlan10
+          domain_nameserver: 192.168.10.1
+          domain_name: example.local
+          range_start: 192.168.10.150
+          range_end: 192.168.10.200
+          routers: 192.168.10.1
+        dhcp_shared_networks:
+        - name: sharednet
+          interface: vlan20
+          subnets:
+          - base: 10.7.0.0
+            netmask: 255.255.255.0
+            routers: 10.7.0.1
+            domain_nameserver: 10.7.0.1
+            domain_name: example.public0
+            ntp_servers: 10.7.0.1
+            pools:
+            - range_start: 10.7.0.2
+              range_end: 10.7.0.254
+          - base: 10.8.0.0
+            netmask: 255.255.255.0
+            routers: 10.8.0.1
+            domain_nameserver: 10.8.0.1
+            domain_name: example.public1
+            ntp_servers: 10.8.0.1
+            pools:
+            - range_start: 10.8.0.2
+              range_end: 10.8.0.254
+
+
 Dependencies
 ------------
 
@@ -157,5 +233,3 @@ Author Information
 ------------------
 
 Philippe Dellaert
-
-
