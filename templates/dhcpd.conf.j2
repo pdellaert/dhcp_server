@@ -38,6 +38,11 @@ log-facility {{ dhcp_common_log_facility }};
 {% endif %}
 {% if dhcp_common_options is defined %}
 
+{% if dhcp_common_enable_pxe_boot %}
+  filename "{{ dhcp_common_pxe_boot_file }}";
+  next-server {{ dhcp_common_pxe_boot_server }};
+{% endif %}
+
 #DHCP options
 {% for o in dhcp_common_options %}
 option {{ o }};
