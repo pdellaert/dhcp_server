@@ -30,6 +30,10 @@
 
 - meta: flush_handlers
 
+# Set desired permissions on /etc/dhcp or use defaults
+- name: Set permissions on /etc/dhcp
+  file: path=/etc/dhcp state=directory mode={{ dhcp_dir_mode | default("0750") }}
+
 # Generate configuration
 - name: Generate dhcpd.conf
   template: src=dhcpd.conf.j2 dest={{ dhcp_server_config }} owner=root group=root mode=0644 validate='/usr/sbin/dhcpd -t -cf %s'
