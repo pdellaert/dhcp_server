@@ -33,6 +33,7 @@
 # Set desired permissions on /etc/dhcp or use defaults
 - name: Set permissions on /etc/dhcp
   file: path=/etc/dhcp state=directory mode={{ dhcp_dir_mode | default("0750") }}
+  when: "ansible_os_family == 'Debian' or ansible_os_family == 'RedHat'"
 
 # Generate configuration
 - name: Generate dhcpd.conf
