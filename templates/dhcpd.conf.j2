@@ -1,5 +1,5 @@
 ## dhcpd.conf
-# {{ ansible_managed }}
+{% if dhcp_use_ansible_managed %}# {{ ansible_managed }}{% endif %}
 # Do not edit manually
 
 {% if dhcp_omapi_port is defined %}
