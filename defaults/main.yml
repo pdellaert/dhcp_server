@@ -2,6 +2,7 @@
 configure_apparmor: false
 
 dhcp_interfaces: eth0
+dhcp_use_ansible_managed: true
 
 dhcp_subnets: []
 dhcp_hosts: []
