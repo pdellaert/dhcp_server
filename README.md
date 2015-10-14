@@ -33,6 +33,7 @@ DHCP server configuration.
     configure_apparmor: true
 
     # Basic configuration information
+    dhcp_use_ansible_managed: true|false (default is true)
     dhcp_interfaces: eth0
     dhcp_common_domain: example.org
     dhcp_common_nameservers: ns1.example.org, ns2.example.org
