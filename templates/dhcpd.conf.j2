@@ -19,13 +19,33 @@ default-lease-time {{ dhcp_common_default_lease_time }};
 {% if dhcp_common_max_lease_time is defined %}
 max-lease-time {{ dhcp_common_max_lease_time }};
 {% endif %}
-{% if dhcp_common_ddns_update_style is defined %}
 
-# Use this to enable / disable dynamic dns updates globally.
+# Dynamic DNS
+ddns-updates {{ dhcp_common_ddns_updates | ternary("on", "off") }};
 ddns-update-style {{ dhcp_common_ddns_update_style }};
+{{ dhcp_common_ddns_client_updates | ternary("allow", "ignore") }} client-updates;
+{{ dhcp_common_ddns_unknown_clients | ternary("allow", "ignore") }} unknown-clients;
+update-static-leases {{ dhcp_common_ddns_update_static_leases | ternary("on", "off") }};
+
+{% if dhcp_common_ddns_keys is defined %}
+{% for key in dhcp_common_ddns_keys %}
+key {{ key.name }} {
+  algorithm hmac-md5;
+  secret {{ key.value }};
+}
+
+{% endfor %}
+{% endif %}
+{% if dhcp_common_ddns_zones is defined %}
+{% for zone in dhcp_common_ddns_zones %}
+zone {{ zone.name }}. {
+  primary {{ zone.primary }};
+  key {{ zone.key }};
+}
+
+{% endfor %}
 {% endif %}
 {% if dhcp_common_authoritative is defined %}
-
 # If this DHCP server is the official DHCP server for the local
 # network, the authoritative directive should be uncommented.
 authoritative;
@@ -39,8 +59,8 @@ log-facility {{ dhcp_common_log_facility }};
 {% if dhcp_common_options is defined %}
 
 {% if dhcp_common_enable_pxe_boot %}
-  filename "{{ dhcp_common_pxe_boot_file }}";
-  next-server {{ dhcp_common_pxe_boot_server }};
+filename "{{ dhcp_common_pxe_boot_file }}";
+next-server {{ dhcp_common_pxe_boot_server }};
 {% endif %}
 
 #DHCP options
@@ -75,6 +95,7 @@ class "{{ c.name }}" {
 {% for h in dhcp_hosts %}
 host {{ h.name }} {
   hardware ethernet {{ h.mac_address }};
+  ddns-hostname {{ h.name }};
 {% if h.fixed_address is defined %}
   fixed-address {{ h.fixed_address }};
 {% endif %}

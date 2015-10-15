@@ -1,8 +1,12 @@
 ---
 configure_apparmor: false
-
-dhcp_interfaces: eth0
 dhcp_use_ansible_managed: true
+dhcp_common_ddns_client_updates: true
+dhcp_common_ddns_unknown_clients: false
+dhcp_common_ddns_update_static_leases: false
+dhcp_common_ddns_update_style: interim
+dhcp_common_ddns_updates: false
+dhcp_interfaces: eth0
 
 dhcp_subnets: []
 dhcp_hosts: []
