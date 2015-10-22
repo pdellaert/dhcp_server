@@ -47,6 +47,20 @@ DHCP server configuration.
     dhcp_common_parameters:
     - filename "pxelinux.0"
 
+    # DDNS configuration
+    dhcp_ddns_client_updates: true|false (default is false)
+    dhcp_ddns_updates: true|false (default is true)
+    dhcp_ddns_unknown_clients: true|false (default is false)
+    dhcp_ddns_update_static_leases: true|false (default is false)
+    dhcp_ddns_update_style: interim
+    dhcp_ddns_keys:
+      - the_key_name: the_key_value
+    dhcp_ddns_zones:
+      -
+        name:example.org
+        primary: 192.168.0.1
+        key: a_key_name_from_dhcp_ddns_keys_list
+
     # Subnet configuration
     dhcp_subnets:
     # Required variables example
