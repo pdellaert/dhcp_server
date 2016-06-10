@@ -1,7 +1,7 @@
 ---
 configure_apparmor: false
+dhcp_common_unknown_clients: true
 dhcp_ddns_client_updates: true
-dhcp_ddns_unknown_clients: false
 dhcp_ddns_update_static_leases: false
 dhcp_ddns_update_style: interim
 dhcp_ddns_updates: false

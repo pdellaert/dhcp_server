@@ -46,11 +46,11 @@ DHCP server configuration.
     - opt66 code 66 = string
     dhcp_common_parameters:
     - filename "pxelinux.0"
+    dhcp_common_unknown_clients: true|false (default is true)
 
     # DDNS configuration
     dhcp_ddns_client_updates: true|false (default is false)
     dhcp_ddns_updates: true|false (default is true)
-    dhcp_ddns_unknown_clients: true|false (default is false)
     dhcp_ddns_update_static_leases: true|false (default is false)
     dhcp_ddns_update_style: interim
     dhcp_ddns_keys:

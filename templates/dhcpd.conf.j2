@@ -20,11 +20,12 @@ default-lease-time {{ dhcp_common_default_lease_time }};
 max-lease-time {{ dhcp_common_max_lease_time }};
 {% endif %}
 
+{{ dhcp_common_unknown_clients | ternary("allow", "ignore") }} unknown-clients;
+
 # Dynamic DNS
 ddns-updates {{ dhcp_ddns_updates | ternary("on", "off") }};
 ddns-update-style {{ dhcp_ddns_update_style }};
 {{ dhcp_ddns_client_updates | ternary("allow", "ignore") }} client-updates;
-{{ dhcp_ddns_unknown_clients | ternary("allow", "ignore") }} unknown-clients;
 update-static-leases {{ dhcp_ddns_update_static_leases | ternary("on", "off") }};
 
 {% if dhcp_ddns_keys is defined %}
