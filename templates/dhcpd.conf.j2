@@ -10,6 +10,9 @@ omapi-port {{ dhcp_omapi_port }};
 
 option domain-name "{{ dhcp_common_domain }}";
 {% endif %}
+{% if dhcp_common_domain_search is defined %}
+option domain-search {{ dhcp_common_domain_search }};
+{% endif %}
 {% if dhcp_common_nameservers is defined %}
 option domain-name-servers {{ dhcp_common_nameservers }};
 {% endif %}

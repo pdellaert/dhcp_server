@@ -36,6 +36,7 @@ DHCP server configuration.
     dhcp_use_ansible_managed: true|false (default is true)
     dhcp_interfaces: eth0
     dhcp_common_domain: example.org
+    dhcp_common_domain_search: '"domain.aaa", "domain.bbb"'
     dhcp_common_nameservers: ns1.example.org, ns2.example.org
     dhcp_common_default_lease_time: 600
     dhcp_common_max_lease_time: 7200
@@ -150,6 +151,7 @@ Examples
       - role: dhcp_server
         dhcp_interfaces: eth0
         dhcp_common_domain: example.org
+        dhcp_common_domain_search: '"domain.aaa", "domain.bbb"'
         dhcp_common_nameservers: ns1.example.org, ns2.example.org
         dhcp_common_default_lease_time: 600
         dhcp_common_max_lease_time: 7200
@@ -170,6 +172,7 @@ Examples
       roles:
       - role: dhcp_server
         dhcp_common_domain: example.org
+        dhcp_common_domain_search: '"domain.aaa", "domain.bbb"'
         dhcp_common_nameservers: ns1.example.org, ns2.example.org
         dhcp_common_default_lease_time: 600
         dhcp_common_max_lease_time: 7200
